@@ -6,7 +6,7 @@ df = pd.read_csv('../data/churn.csv')
 
 df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
 df = df.dropna()
-
+df = df.drop('customerID', axis=1)
 df = pd.get_dummies(df , drop_first = True)
 
 x = df.drop('Churn_Yes' , axis = 1)

@@ -1,6 +1,5 @@
 import pandas as pd
 from joblib import dump
-from matplotlib.scale import LogitScale
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
@@ -10,7 +9,7 @@ df = pd.read_csv('data/churn.csv')
 
 df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
 df = df.dropna()
-
+df = df.drop('customerID', axis=1)
 df = pd.get_dummies(df , drop_first = True)
 
 x = df.drop('Churn_Yes' , axis = 1)
@@ -31,3 +30,4 @@ print("Accuracy:", acc)
 
 dump(model, "model/churn_model.pkl")
 print("Model saved")
+print(x.columns)
