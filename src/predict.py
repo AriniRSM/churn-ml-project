@@ -1,6 +1,55 @@
 import pandas as pd
 from joblib import load
 
+ENCODING_MAP = {
+    "gender": {"Male": "gender_Male"},
+    "Partner": {"Yes": "Partner_Yes"},
+    "Dependents": {"Yes": "Dependents_Yes"},
+    "PhoneService": {"Yes": "PhoneService_Yes"},
+    "MultipleLines": {
+        "Yes": "MultipleLines_Yes",
+        "No phone service": "MultipleLines_No phone service"
+    },
+    "InternetService": {
+        "Fiber optic": "InternetService_Fiber optic",
+        "No": "InternetService_No"
+    },
+    "OnlineSecurity": {
+        "Yes": "OnlineSecurity_Yes",
+        "No internet service": "OnlineSecurity_No internet service"
+    },
+    "OnlineBackup": {
+        "Yes": "OnlineBackup_Yes",
+        "No internet service": "OnlineBackup_No internet service"
+    },
+    "DeviceProtection": {
+        "Yes": "DeviceProtection_Yes",
+        "No internet service": "DeviceProtection_No internet service"
+    },
+    "TechSupport": {
+        "Yes": "TechSupport_Yes",
+        "No internet service": "TechSupport_No internet service"
+    },
+    "StreamingTV": {
+        "Yes": "StreamingTV_Yes",
+        "No internet service": "StreamingTV_No internet service"
+    },
+    "StreamingMovies": {
+        "Yes": "StreamingMovies_Yes",
+        "No internet service": "StreamingMovies_No internet service"
+    },
+    "Contract": {
+        "One year": "Contract_One year",
+        "Two year": "Contract_Two year"
+    },
+    "PaperlessBilling": {"Yes": "PaperlessBilling_Yes"},
+    "PaymentMethod": {
+        "Credit card (automatic)": "PaymentMethod_Credit card (automatic)",
+        "Electronic check": "PaymentMethod_Electronic check",
+        "Mailed check": "PaymentMethod_Mailed check"
+    }
+}
+
 FEATURE_COLUMNS = [
     'SeniorCitizen', 'tenure', 'MonthlyCharges', 'TotalCharges',
     'gender_Male', 'Partner_Yes', 'Dependents_Yes', 'PhoneService_Yes',
@@ -19,7 +68,7 @@ FEATURE_COLUMNS = [
     'PaymentMethod_Mailed check'
 ]
 
-def predict_churn(user_input: dict) -> str:
+def predict_churn(user_input: dict):
     model = load('model/churn_model.pkl')
     data = dict.fromkeys(FEATURE_COLUMNS, 0)
 
@@ -28,75 +77,14 @@ def predict_churn(user_input: dict) -> str:
     data['MonthlyCharges'] = user_input['MonthlyCharges']
     data['TotalCharges'] = user_input['TotalCharges']
 
-    if user_input['gender'] == 'Male':
-        data['gender_Male'] = 1
-
-    if user_input['Partner'] == 'Yes':
-        data['Partner_Yes'] = 1
-
-    if user_input['Dependents'] == 'Yes':
-        data['Dependents_Yes'] = 1
-
-    if user_input['PhoneService'] == 'Yes':
-        data['PhoneService_Yes'] = 1
-
-    if user_input['MultipleLines'] == 'Yes':
-        data['MultipleLines_Yes'] = 1
-    elif user_input['MultipleLines'] == 'No phone service':
-        data['MultipleLines_No phone service'] = 1
-
-    if user_input['InternetService'] == 'Fiber optic':
-        data['InternetService_Fiber optic'] = 1
-    elif user_input['InternetService'] == 'No':
-        data['InternetService_No'] = 1
-
-    if user_input['OnlineSecurity'] == 'Yes':
-        data['OnlineSecurity_Yes'] = 1
-    elif user_input['OnlineSecurity'] == 'No internet service':
-        data['OnlineSecurity_No internet service'] = 1
-
-    if user_input['OnlineBackup'] == 'Yes':
-        data['OnlineBackup_Yes'] = 1
-    elif user_input['OnlineBackup'] == 'No internet service':
-        data['OnlineBackup_No internet service'] = 1
-
-    if user_input['DeviceProtection'] == 'Yes':
-        data['DeviceProtection_Yes'] = 1
-    elif user_input['DeviceProtection'] == 'No internet service':
-        data['DeviceProtection_No internet service'] = 1
-
-    if user_input['TechSupport'] == 'Yes':
-        data['TechSupport_Yes'] = 1
-    elif user_input['TechSupport'] == 'No internet service':
-        data['TechSupport_No internet service'] = 1
-
-    if user_input['StreamingTV'] == 'Yes':
-        data['StreamingTV_Yes'] = 1
-    elif user_input['StreamingTV'] == 'No internet service':
-        data['StreamingTV_No internet service'] = 1
-
-    if user_input['StreamingMovies'] == 'Yes':
-        data['StreamingMovies_Yes'] = 1
-    elif user_input['StreamingMovies'] == 'No internet service':
-        data['StreamingMovies_No internet service'] = 1
-
-    if user_input['Contract'] == 'One year':
-        data['Contract_One year'] = 1
-    elif user_input['Contract'] == 'Two year':
-        data['Contract_Two year'] = 1
-
-    if user_input['PaperlessBilling'] == 'Yes':
-        data['PaperlessBilling_Yes'] = 1
-
-    if user_input['PaymentMethod'] == 'Credit card (automatic)':
-        data['PaymentMethod_Credit card (automatic)'] = 1
-    elif user_input['PaymentMethod'] == 'Electronic check':
-        data['PaymentMethod_Electronic check'] = 1
-    elif user_input['PaymentMethod'] == 'Mailed check':
-        data['PaymentMethod_Mailed check'] = 1
+    for field, rules in ENCODING_MAP.items():
+        value = user_input[field]
+        if value in rules:
+            data[rules[value]] = 1
 
     df = pd.DataFrame([data])
 
-    prediction = model.predict(df)[0]
+    proba = model.predict_proba(df)[0][1]
+    prediction = "Yes" if proba >= 0.5 else "No"
 
-    return "Yes" if prediction == 1 else "No"
+    return prediction, round(proba*100, 2)

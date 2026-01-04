@@ -31,6 +31,6 @@ class CustomerInput(BaseModel):
 
 @app.post("/predict")
 def predict(input: CustomerInput):
-    result = predict_churn(input.dict())
-    return {"churn" : result}
+    result, confidence = predict_churn(input.dict())
+    return {"churn" : result, "confidence" : confidence}
 
