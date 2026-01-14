@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 from joblib import load
 
@@ -68,9 +70,14 @@ FEATURE_COLUMNS = [
     'PaymentMethod_Mailed check'
 ]
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = BASE_DIR / "model" / "churn_model.pkl"
+SCALER_PATH = BASE_DIR / "model" / "scaler.pkl"
+
 def predict_churn(user_input: dict):
-    model = load('model/churn_model.pkl')
-    scaler = load('model/scaler.pkl')
+    model = load(MODEL_PATH)
+    scaler = load(SCALER_PATH)
+
     data = dict.fromkeys(FEATURE_COLUMNS, 0)
 
     data['SeniorCitizen'] = user_input['SeniorCitizen']
