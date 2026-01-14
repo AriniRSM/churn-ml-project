@@ -62,7 +62,7 @@ if st.button("Predict Churn"):
         "PaymentMethod": PaymentMethod,
     }
 
-    response = requests.post("http://localhost:8000/predict", json=payload)
+    response = requests.post("https://churn-api-l8m8.onrender.com/predict", json=payload)
     prediction = response.json()
 
     st.success(f"Customer to leave: {prediction['churn']} ({prediction['confidence']}%)")
