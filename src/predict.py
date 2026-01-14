@@ -70,6 +70,7 @@ FEATURE_COLUMNS = [
 
 def predict_churn(user_input: dict):
     model = load('model/churn_model.pkl')
+    scaler = load('model/scaler.pkl')
     data = dict.fromkeys(FEATURE_COLUMNS, 0)
 
     data['SeniorCitizen'] = user_input['SeniorCitizen']
@@ -83,8 +84,9 @@ def predict_churn(user_input: dict):
             data[rules[value]] = 1
 
     df = pd.DataFrame([data])
+    df_scaled = scaler.transform(df)
+    proba = model.predict_proba(df_scaled)[0][1]
 
-    proba = model.predict_proba(df)[0][1]
     prediction = "Yes" if proba >= 0.5 else "No"
 
     return prediction, round(proba*100, 2)

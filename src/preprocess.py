@@ -21,4 +21,4 @@ def load_and_preprocess(path):
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    return X_train, X_test, y_train, y_test, X.columns
+    return X_train, X_test, y_train, y_test, X.columns, scaler
