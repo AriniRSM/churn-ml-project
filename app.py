@@ -1,20 +1,6 @@
 import streamlit as st
 import requests
 
-st.markdown(
-    """
-    <style>
-    .stApp {
-       background-color: #0E1117;
-    }
-    h1, h2, h3{
-       color: white !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
 st.title("Customer Churn Predictor")
 st.write("Enter Customer details:")
 
