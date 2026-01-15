@@ -7,12 +7,8 @@ st.markdown(
     .stApp {
        background-color: #0E1117;
     }
-    h1, h2, h3, label, p, div {
+    h1, h2, h3{
        color: white !important;
-    }
-    input, textarea, .stSelectbox, .stNumberInput input {
-        color: black !important;
-        background-color: white !important;
     }
     </style>
     """,
