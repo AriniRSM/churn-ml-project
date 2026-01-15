@@ -10,10 +10,11 @@ An end-to-end Machine Learning application that predicts whether a customer is l
 * REST API built using FastAPI
 * Interactive web UI built using Streamlit
 * Real-time churn prediction with confidence score
+* Fully deployed ML system with live inference 
 
 ## Tech Stack
 
-Python, Pandas, Scikit-Learn, FastAPI, Streamlit
+Python, Pandas, Scikit-Learn, FastAPI, Streamlit, Render Cloud
 
 ## Project Structure
 
@@ -28,10 +29,15 @@ churn-ml-project/
 │   └── main.py
 ├── model/
 │   └── churn_model.pkl
+    └── scaler.pkl
 ├── app.py
 └── README.md
 
-## How to Run
+## Live Demo:
+* UI: https://churn-ui.onrender.com
+* API: https://churn-api.onrender.com/docs
+
+## How to Run locally
 
 1. Train the model :
    python3 -m src.train

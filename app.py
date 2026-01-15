@@ -10,6 +10,10 @@ st.markdown(
     h1, h2, h3, label, p, div {
        color: white !important;
     }
+    input, textarea, .stSelectbox, .stNumberInput input {
+        color: black !important;
+        background-color: white !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
